@@ -1,7 +1,8 @@
-pragma solidity ^0.4.10;
+pragma solidity ^0.4.11;
 import "./zeppelin/ownership/Ownable.sol";
+import "./zeppelin/token/ERC20.sol";
 
-contract StandaloneFund is Ownable{    
+contract StandaloneFund is Ownable {    
     
     // Flag indicating if this fund is for sale - user will need to manually set this to true to allow a sale
     bool public isForSale = false; 
@@ -26,7 +27,7 @@ contract StandaloneFund is Ownable{
     // Allow someone to purchase the fund.  Send current owner the ETH and assign ownership
     function Purchase() payable {
         // Ensure this fund is currently for sale
-        require(forSale);
+        require(isForSale);
 
         // Ensure the value sent in is greater or equal to the required price
         require(msg.value >= salePrice);
