@@ -3,6 +3,8 @@ import "./zeppelin/ownership/Ownable.sol";
 import "./zeppelin/token/ERC20.sol";
 
 contract StandaloneFund is Ownable {    
+
+    event Purchased(address purchaser, uint _value);
     
     // Flag indicating if this fund is for sale - user will need to manually set this to true to allow a sale
     bool public isForSale = false; 
@@ -41,10 +43,17 @@ contract StandaloneFund is Ownable {
 
         // Assign ownership
         owner = msg.sender;
+
+        // Trigger event
+        Purchased(msg.sender, msg.value);
     }
 
     // Allow the owner to withdraw any tokens that are held in this fund
     function WithdrawTokens(ERC20 token, uint amount) onlyOwner {
+
+        // Don't allow withdraws if the fund is for sale.  Need to prevent sniping of funds out if another user wants to buy.
+        require(!isForSale);
+
         token.transfer(owner, amount);
     }
 }
